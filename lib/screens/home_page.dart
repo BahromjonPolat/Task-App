@@ -141,6 +141,8 @@ class _HomePageState extends State<HomePage> {
         ),
       );
 
+
+  /// SEARCH FIELD
   Container _showSearchButton() => Container(
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
@@ -188,16 +190,19 @@ class _HomePageState extends State<HomePage> {
       );
 
 
-  _showBottomNavigationBar() => ElevatedButton.icon(
-        onPressed: _showBottomSheetDialog,
-        icon: _setIcon(Icons.add_circle),
-        label: setSimpleText("Add new task", color: colorWhite),
-        style: ElevatedButton.styleFrom(
-            primary: colorDeepBlue,
-            fixedSize: Size(_width!, 65.0),
-            shape: RoundedRectangleBorder(
-                borderRadius: _setBorderRadius(radius: 32.0))),
-      );
+  _showBottomNavigationBar() => Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: ElevatedButton.icon(
+          onPressed: _showBottomSheetDialog,
+          icon: _setIcon(Icons.add_circle),
+          label: setSimpleText("Add new task", color: colorWhite),
+          style: ElevatedButton.styleFrom(
+              primary: colorDeepBlue,
+              fixedSize: Size(_width!, 65.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: _setBorderRadius(radius: 32.0))),
+        ),
+  );
 
   Icon _setIcon(IconData iconData, {Color? color, double? size}) => Icon(
         iconData,
@@ -308,23 +313,29 @@ class _HomePageState extends State<HomePage> {
           _setRadioButton("Medium"),
           _setRadioButton("Low"),
           _setRadioButton("None"),
+
         ],
       );
 
   _setRadioButton(String label) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Radio(
-              value: label,
-              groupValue: _radioGroup,
-              activeColor: colorWhite,
-              focusColor: colorWhite,
-              hoverColor: colorWhite,
-              onChanged: (v) {
-                setState(() {
-                  _radioGroup = label;
-                });
-              }),
+          Theme(
+            data: Theme.of(context).copyWith(
+              unselectedWidgetColor: colorWhite
+            ),
+            child: Radio(
+                value: label,
+                groupValue: _radioGroup,
+                activeColor: colorWhite,
+                focusColor: colorWhite,
+                hoverColor: colorWhite,
+                onChanged: (v) {
+                  setState(() {
+                    _radioGroup = label;
+                  });
+                }),
+          ),
           setSimpleText(label, color: colorWhite),
         ],
       );
@@ -387,7 +398,5 @@ class _HomePageState extends State<HomePage> {
     "marketing",
     "Design projection",
   ];
-
-
 
 }

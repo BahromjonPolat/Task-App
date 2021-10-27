@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storage/components/colors.dart';
 
 Text setSimpleText(
     String text, {
