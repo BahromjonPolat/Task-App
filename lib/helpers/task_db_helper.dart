@@ -51,7 +51,6 @@ class DatabaseHelper {
     Database db = await _getDatabase();
     var result = db.query('tasks');
     db.close();
-    result.then((value) => print(value));
     return result;
   }
 

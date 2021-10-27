@@ -2,8 +2,10 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:storage/components/button_colors.dart';
+import 'package:storage/components/date_time_titles.dart';
 import 'package:storage/data/image_links.dart';
-import 'package:storage/helpers/tast_db_helper.dart';
+import 'package:storage/helpers/task_db_helper.dart';
 import 'package:storage/models/task_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -52,7 +54,8 @@ class _HomePageState extends State<HomePage> {
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
 
-    _currentDate = "${_date.day} ${_date.month} ${_date.year} ${_date.weekday}";
+    _currentDate =
+        "${_date.day} ${monthList[_date.month - 1].substring(0, 3)} ${_date.year} ${weekList[_date.weekday - 1].substring(0, 3)}";
     return Scaffold(
       body: _buildBody(),
       bottomNavigationBar: _showBottomNavigationBar(),
@@ -64,39 +67,61 @@ class _HomePageState extends State<HomePage> {
             future: _db.getAllTasks(),
             builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
               return snap.hasData
-                  ? CustomScrollView(
-                      slivers: [
-                        _showHeader(),
-                        SliverList(
-                          delegate: SliverChildListDelegate(
-                            List.generate(snap.data!.length, (index) {
-                              Map<String, dynamic> map = snap.data![index];
-                              return Card(
-                                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
-                                child: ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-                                  title: _setText(map['title'], size: 18.0, weight: FontWeight.bold),
-                                  subtitle: _setText(map['subtitle'], color: _colorGrey),
-                                  trailing: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      _setText(map['priority'], color: _colorGrey),
-                                      CircleAvatar(
-                                        radius: 16.0,
-                                        backgroundImage: NetworkImage(map['imageUrl']),)
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                        )
-                      ],
-                    )
+                  ? _customScrollBody(snap)
                   : const CupertinoActivityIndicator();
             }),
       );
 
+  CustomScrollView _customScrollBody(
+      AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+    return CustomScrollView(
+      slivers: [
+        _showHeader(),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            List.generate(snap.data!.length, (index) {
+              Map<String, dynamic> map = snap.data![index];
+              Task task = Task.fromJson(map);
+              return Card(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 6.0,
+                    horizontal: 12.0,
+                  ),
+                  title: _setText(
+                    task.title,
+                    size: 18.0,
+                    weight: FontWeight.bold,
+                  ),
+                  subtitle: _setText(
+                    task.subTitle,
+                    color: _colorGrey,
+                  ),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _setText(
+                        task.priority,
+                        color: _colorGrey,
+                      ),
+                      CircleAvatar(
+                        radius: 16.0,
+                        backgroundImage: NetworkImage(task.imageUrl),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        )
+      ],
+    );
+  }
+
+  /// Ilovaning yuqori qismi
   SliverToBoxAdapter _showHeader() => SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -113,7 +138,11 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _setText("Today", size: 32.0, weight: FontWeight.bold),
-                    _setIcon(Icons.calendar_today_outlined, color: _colorGrey),
+                    _setIcon(
+                      Icons.calendar_today_outlined,
+                      color: _colorGrey,
+                      size: 16.0,
+                    ),
                   ],
                 ),
                 _setText(_currentDate!, color: _colorGrey),
@@ -197,9 +226,10 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: _setBorderRadius(radius: 32.0))),
       );
 
-  Icon _setIcon(IconData iconData, {Color? color}) => Icon(
+  Icon _setIcon(IconData iconData, {Color? color, double? size}) => Icon(
         iconData,
         color: color ?? _colorWhite,
+        size: size ?? 24.0,
       );
 
   BorderRadius _setBorderRadius({double? radius}) =>
@@ -275,7 +305,7 @@ class _HomePageState extends State<HomePage> {
           _taskTitles.length + 1,
           (index) => index == _taskTitles.length
               ? _showAddButton()
-              : _setTitleButton(_taskTitles[index], _colorList[index]),
+              : _setTitleButton(_taskTitles[index], colorList[index]),
         ),
       );
 
@@ -368,7 +398,7 @@ class _HomePageState extends State<HomePage> {
           if (title.isEmpty) return;
 
           Task task = Task(title, _subtitle, _radioGroup, _imageUrl);
-           _db.addTask(task);
+          _db.addTask(task);
         },
         child:
             _setText(label, color: color != null ? _colorBlack : _colorWhite),
@@ -385,13 +415,6 @@ class _HomePageState extends State<HomePage> {
     "Design projection",
   ];
 
-  final List<Color> _colorList = [
-    Colors.amber.shade200,
-    Colors.purple.shade200,
-    Colors.yellow.shade400,
-    Colors.amber.shade200,
-    Colors.amber.shade200,
-  ];
 
   final List<String> _imageLinks = [
     imageGirl1,
