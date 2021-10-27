@@ -3,10 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:storage/components/button_colors.dart';
+import 'package:storage/components/colors.dart';
 import 'package:storage/components/date_time_titles.dart';
-import 'package:storage/data/image_links.dart';
+import 'package:storage/components/image_list.dart';
 import 'package:storage/helpers/task_db_helper.dart';
 import 'package:storage/models/task_model.dart';
+import 'package:storage/widgets/set_text.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,22 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const Color _colorTransparent = Colors.transparent;
-  static const Color _colorWhite = Colors.white;
-  static const Color _colorBlack = Colors.black;
-  static const Color _colorGreen = Colors.green;
-  static const Color _colorGrey = Colors.grey;
-  final Color _colorBlue = Colors.blue.shade800;
 
-  final LinearGradient _gradient = LinearGradient(colors: [
-    Colors.blue.shade200,
-    Colors.blue.shade300,
-    Colors.blue.shade400,
-    Colors.blue.shade500,
-    Colors.blue.shade600,
-    Colors.blue.shade700,
-    Colors.blue.shade800,
-  ]);
 
   double? _height;
   double? _width;
@@ -90,21 +77,21 @@ class _HomePageState extends State<HomePage> {
                     vertical: 6.0,
                     horizontal: 12.0,
                   ),
-                  title: _setText(
+                  title: setSimpleText(
                     task.title,
                     size: 18.0,
                     weight: FontWeight.bold,
                   ),
-                  subtitle: _setText(
+                  subtitle: setSimpleText(
                     task.subTitle,
-                    color: _colorGrey,
+                    color: colorGrey,
                   ),
                   trailing: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _setText(
+                      setSimpleText(
                         task.priority,
-                        color: _colorGrey,
+                        color: colorGrey,
                       ),
                       CircleAvatar(
                         radius: 16.0,
@@ -137,15 +124,15 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _setText("Today", size: 32.0, weight: FontWeight.bold),
+                    setSimpleText("Today", size: 32.0, weight: FontWeight.bold),
                     _setIcon(
                       Icons.calendar_today_outlined,
-                      color: _colorGrey,
+                      color: colorGrey,
                       size: 16.0,
                     ),
                   ],
                 ),
-                _setText(_currentDate!, color: _colorGrey),
+                setSimpleText(_currentDate!, color: colorGrey),
                 _showSearchButton(),
                 _showButtons(),
               ],
@@ -157,14 +144,14 @@ class _HomePageState extends State<HomePage> {
   Container _showSearchButton() => Container(
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          gradient: _gradient,
+          gradient: searchButtonGradientColor,
           borderRadius: _setBorderRadius(),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _setIcon(Icons.search),
-            _setText("Search", color: _colorWhite),
+            setSimpleText("Search", color: colorWhite),
           ],
         ),
       );
@@ -173,7 +160,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Badge(
-              badgeContent: _setText("4", color: _colorWhite, size: 10.0),
+              badgeContent: setSimpleText("4", color: colorWhite, size: 10.0),
               position: const BadgePosition(top: 0.0, end: 0.0),
               child: _setButton("Undone", 0)),
           _setButton("Meetings", 1),
@@ -187,40 +174,26 @@ class _HomePageState extends State<HomePage> {
             _currentIndex = index;
           });
         },
-        child: _setText(
+        child: setSimpleText(
           label,
-          color: _currentIndex == index ? _colorBlue : _colorGrey,
+          color: _currentIndex == index ? colorDeepBlue : colorGrey,
           weight: FontWeight.bold,
         ),
         style: ElevatedButton.styleFrom(
             primary: _currentIndex == index
                 ? const Color(0x2b195ecd)
-                : _colorTransparent,
+                : colorTransparent,
             elevation: 0.0,
             shape: RoundedRectangleBorder(borderRadius: _setBorderRadius())),
       );
 
-  Text _setText(
-    String text, {
-    Color? color,
-    double? size,
-    FontWeight? weight,
-  }) =>
-      Text(
-        text,
-        style: TextStyle(
-          color: color ?? _colorBlack,
-          fontSize: size ?? 14.0,
-          fontWeight: weight ?? FontWeight.normal,
-        ),
-      );
 
   _showBottomNavigationBar() => ElevatedButton.icon(
         onPressed: _showBottomSheetDialog,
         icon: _setIcon(Icons.add_circle),
-        label: _setText("Add new task", color: _colorWhite),
+        label: setSimpleText("Add new task", color: colorWhite),
         style: ElevatedButton.styleFrom(
-            primary: _colorBlue,
+            primary: colorDeepBlue,
             fixedSize: Size(_width!, 65.0),
             shape: RoundedRectangleBorder(
                 borderRadius: _setBorderRadius(radius: 32.0))),
@@ -228,7 +201,7 @@ class _HomePageState extends State<HomePage> {
 
   Icon _setIcon(IconData iconData, {Color? color, double? size}) => Icon(
         iconData,
-        color: color ?? _colorWhite,
+        color: color ?? colorWhite,
         size: size ?? 24.0,
       );
 
@@ -239,8 +212,8 @@ class _HomePageState extends State<HomePage> {
     showModalBottomSheet(
         isScrollControlled: true,
         elevation: 0.0,
-        barrierColor: _colorTransparent,
-        backgroundColor: _colorTransparent,
+        barrierColor: colorTransparent,
+        backgroundColor: colorTransparent,
         context: context,
         builder: (_) {
           return StatefulBuilder(builder: (context, state) {
@@ -248,7 +221,7 @@ class _HomePageState extends State<HomePage> {
               height: _height! * 0.82,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               decoration: BoxDecoration(
-                  color: _colorBlue,
+                  color: colorDeepBlue,
                   borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(32.0),
                       topLeft: Radius.circular(32.0))),
@@ -258,15 +231,15 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   _showTextField(),
                   _showTaskTitles(),
-                  const Divider(color: _colorWhite, thickness: 0.5),
-                  _setText(
+                  const Divider(color: colorWhite, thickness: 0.5),
+                  setSimpleText(
                     "Priority",
-                    color: _colorWhite,
+                    color: colorWhite,
                     size: 18.00,
                   ),
                   _showRadioButtons(),
-                  const Divider(color: _colorWhite, thickness: 0.5),
-                  _setText("Invite", color: _colorWhite, size: 18.0),
+                  const Divider(color: colorWhite, thickness: 0.5),
+                  setSimpleText("Invite", color: colorWhite, size: 18.0),
                   _showProfileImages(),
                   _showFooterButtons(),
                 ],
@@ -314,7 +287,7 @@ class _HomePageState extends State<HomePage> {
           Fluttertoast.showToast(msg: "$label was chosen");
           _subtitle = label;
         },
-        child: _setText(label),
+        child: setSimpleText(label),
         style: ElevatedButton.styleFrom(primary: color, elevation: 0.0),
       );
 
@@ -344,25 +317,25 @@ class _HomePageState extends State<HomePage> {
           Radio(
               value: label,
               groupValue: _radioGroup,
-              activeColor: _colorWhite,
-              focusColor: _colorWhite,
-              hoverColor: _colorWhite,
+              activeColor: colorWhite,
+              focusColor: colorWhite,
+              hoverColor: colorWhite,
               onChanged: (v) {
                 setState(() {
                   _radioGroup = label;
                 });
               }),
-          _setText(label, color: _colorWhite),
+          setSimpleText(label, color: colorWhite),
         ],
       );
 
   Wrap _showProfileImages() => Wrap(
         spacing: 12.0,
         children: List.generate(
-          _imageLinks.length + 1,
+          imageLinks.length + 1,
           (index) => index != 4
               ? _setImage(
-                  _imageLinks[index],
+                  imageLinks[index],
                 )
               : _showAddButton(size: 48.0),
         ),
@@ -387,7 +360,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           _setBottomButton("Recurring"),
-          _setBottomButton("Save", color: _colorWhite),
+          _setBottomButton("Save", color: colorWhite),
         ],
       );
 
@@ -401,9 +374,9 @@ class _HomePageState extends State<HomePage> {
           _db.addTask(task);
         },
         child:
-            _setText(label, color: color != null ? _colorBlack : _colorWhite),
+            setSimpleText(label, color: color != null ? colorBlack : colorWhite),
         style: ElevatedButton.styleFrom(
-          primary: color ?? _colorTransparent,
+          primary: color ?? colorTransparent,
           elevation: 0.0,
         ),
       );
@@ -416,10 +389,5 @@ class _HomePageState extends State<HomePage> {
   ];
 
 
-  final List<String> _imageLinks = [
-    imageGirl1,
-    imageGirl2,
-    imageMan1,
-    imageMan2,
-  ];
+
 }
