@@ -68,8 +68,14 @@ class _HomePageState extends State<HomePage> {
               Map<String, dynamic> map = snap.data![index];
               Task task = Task.fromJson(map);
               return Card(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+                elevation: 3.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: _setBorderRadius(),
+                ),
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 6.0,
+                ),
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 6.0,

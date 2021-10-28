@@ -35,7 +35,7 @@ class DatabaseHelper {
     return openDb;
   }
 
-  /// 3. MA'LUMOTLAR BAZASINI OLISH. AGAR MA''LUMOTLAR BAZASI AVVAL OCHILGAN
+  /// 3. MA'LUMOTLAR BAZASINI OLISH. AGAR MA'LUMOTLAR BAZASI AVVAL OCHILGAN
   /// BO'LSA, database RETUTN QILINADI, AKS HOLDA _initDatabase() RETURN QILINADI.
   Future<Database> _getDatabase() async {
     return database ?? await _initDatabase();

@@ -8,9 +8,6 @@ const Color colorGreen = Colors.green;
 const Color colorBlue = Colors.blue;
 final Color colorDeepBlue = Colors.blue.shade800;
 
-
-
-
 final LinearGradient searchButtonGradientColor = LinearGradient(colors: [
   Colors.blue.shade200,
   Colors.blue.shade300,
