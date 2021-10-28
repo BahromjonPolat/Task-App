@@ -18,8 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
   double? _height;
   double? _width;
 
@@ -141,7 +139,6 @@ class _HomePageState extends State<HomePage> {
         ),
       );
 
-
   /// SEARCH FIELD
   Container _showSearchButton() => Container(
         padding: const EdgeInsets.all(8.0),
@@ -189,10 +186,9 @@ class _HomePageState extends State<HomePage> {
             shape: RoundedRectangleBorder(borderRadius: _setBorderRadius())),
       );
 
-
   _showBottomNavigationBar() => Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: ElevatedButton.icon(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton.icon(
           onPressed: _showBottomSheetDialog,
           icon: _setIcon(Icons.add_circle),
           label: setSimpleText("Add new task", color: colorWhite),
@@ -202,7 +198,7 @@ class _HomePageState extends State<HomePage> {
               shape: RoundedRectangleBorder(
                   borderRadius: _setBorderRadius(radius: 32.0))),
         ),
-  );
+      );
 
   Icon _setIcon(IconData iconData, {Color? color, double? size}) => Icon(
         iconData,
@@ -313,7 +309,6 @@ class _HomePageState extends State<HomePage> {
           _setRadioButton("Medium"),
           _setRadioButton("Low"),
           _setRadioButton("None"),
-
         ],
       );
 
@@ -321,9 +316,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Theme(
-            data: Theme.of(context).copyWith(
-              unselectedWidgetColor: colorWhite
-            ),
+            data: Theme.of(context).copyWith(unselectedWidgetColor: colorWhite),
             child: Radio(
                 value: label,
                 groupValue: _radioGroup,
@@ -383,9 +376,12 @@ class _HomePageState extends State<HomePage> {
 
           Task task = Task(title, _subtitle, _radioGroup, _imageUrl);
           _db.addTask(task);
+          Fluttertoast.showToast(msg: "$title was added");
+          Navigator.pop(context);
+          setState(() {});
         },
-        child:
-            setSimpleText(label, color: color != null ? colorBlack : colorWhite),
+        child: setSimpleText(label,
+            color: color != null ? colorBlack : colorWhite),
         style: ElevatedButton.styleFrom(
           primary: color ?? colorTransparent,
           elevation: 0.0,
@@ -398,5 +394,4 @@ class _HomePageState extends State<HomePage> {
     "marketing",
     "Design projection",
   ];
-
 }
